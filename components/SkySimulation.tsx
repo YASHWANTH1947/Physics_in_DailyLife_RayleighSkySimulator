@@ -41,8 +41,11 @@ export const SkySimulation: React.FC<SkySimulationProps> = ({ sunAngle }) => {
     
     const currentAngle = angleRef.current;
 
+    // Map 0-180 slider to -15 to 195 visual degrees so the sun goes BELOW horizon
+    const visualAngle = -12 + (currentAngle / 180) * 204;
+
     // Angle 0 = Sunrise (Left), 90 = Noon (Top), 180 = Sunset (Right)
-    const rad = (currentAngle * Math.PI) / 180;
+    const rad = (visualAngle * Math.PI) / 180;
     
     // Calculate Sky Colors
     const distFromNoon = Math.abs(currentAngle - 90);
@@ -74,7 +77,6 @@ export const SkySimulation: React.FC<SkySimulationProps> = ({ sunAngle }) => {
     const cy = height * 0.9; // Horizon line lower at 90% height
     
     // Maximize radius: Fit within width (with padding) and height (with top padding)
-    // This makes the arc much larger
     const orbitRadius = Math.min(width * 0.45, height * 0.75);
 
     // Sun Position
@@ -82,8 +84,8 @@ export const SkySimulation: React.FC<SkySimulationProps> = ({ sunAngle }) => {
     const sunX = cx + orbitRadius * Math.cos(theta);
     const sunY = cy - orbitRadius * Math.sin(theta);
 
-    // Draw Rays / Scattering (only if sun is above horizon)
-    if (sunY <= cy + 10) {
+    // Draw Rays / Scattering (only if sun is somewhat visible)
+    if (sunY <= cy + 40) {
         ctx.save();
         ctx.globalAlpha = 0.2 + (0.2 * (1-sunsetFactor)); 
         ctx.lineWidth = 2;
@@ -121,6 +123,7 @@ export const SkySimulation: React.FC<SkySimulationProps> = ({ sunAngle }) => {
     // Draw Ground
     ctx.fillStyle = "#0f172a"; 
     ctx.beginPath();
+    // Draw ground over the bottom part of sun to simulate dipping below horizon
     ctx.fillRect(0, cy, width, height - cy);
 
     // Draw Atmosphere Arc (Visual Guide)
@@ -129,6 +132,7 @@ export const SkySimulation: React.FC<SkySimulationProps> = ({ sunAngle }) => {
     ctx.setLineDash([6, 6]);
     ctx.beginPath();
     const atmosphereRadius = orbitRadius + 25;
+    // Only draw arc above horizon
     ctx.arc(cx, cy, atmosphereRadius, Math.PI, 0);
     ctx.stroke();
     ctx.setLineDash([]);
@@ -156,6 +160,7 @@ export const SkySimulation: React.FC<SkySimulationProps> = ({ sunAngle }) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
+    // Use ResizeObserver to handle container resizes gracefully
     const resizeObserver = new ResizeObserver(() => {
       requestAnimationFrame(draw);
     });

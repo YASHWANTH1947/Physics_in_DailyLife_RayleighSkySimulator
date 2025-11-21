@@ -1,9 +1,18 @@
 import { GoogleGenAI } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-
 export const explainSkyPhysics = async (sunAngle: number, pathLength: number): Promise<string> => {
   try {
+    // Initialize the client inside the function to avoid top-level crashes
+    // if the environment variable is missing during module import.
+    const apiKey = process.env.API_KEY;
+    
+    if (!apiKey) {
+      console.warn("API_KEY is missing. AI explanation feature will be disabled.");
+      return "Simulation is running in offline mode. AI explanations require a valid API_KEY in the environment variables.";
+    }
+
+    const ai = new GoogleGenAI({ apiKey });
+
     const timeOfDay = sunAngle < 20 ? "Sunrise" : sunAngle > 160 ? "Sunset" : "Midday";
     
     const prompt = `
@@ -29,6 +38,6 @@ export const explainSkyPhysics = async (sunAngle: number, pathLength: number): P
     return response.text || "Unable to generate explanation at the moment.";
   } catch (error) {
     console.error("Error fetching explanation:", error);
-    return "The AI physicist is currently offline. Try again later!";
+    return "The AI physicist is currently offline. Please check your connection and API key.";
   }
 };
