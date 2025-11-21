@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { Sun, CloudSun, Moon, Info, Bot } from 'lucide-react';
+import { Sun, CloudSun, Moon, Info, Bot, GraduationCap, User } from 'lucide-react';
 import { SkySimulation } from './components/SkySimulation';
 import { PhysicsCharts } from './components/PhysicsCharts';
 import { explainSkyPhysics } from './services/geminiService';
@@ -158,6 +158,38 @@ export default function App() {
             <li>Note the <strong>Atmosphere Path</strong> value increasing as the sun gets lower.</li>
           </ul>
         </section>
+
+        {/* Student & Guide Details Footer */}
+        <footer className="mt-12 pt-8 border-t border-slate-800">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Student Card */}
+            <div className="bg-slate-800/40 p-6 rounded-xl border border-slate-700/50 hover:border-blue-500/30 transition-colors flex items-center gap-5">
+              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center text-white shadow-lg shrink-0">
+                <GraduationCap className="w-7 h-7" />
+              </div>
+              <div>
+                <p className="text-xs text-blue-400 uppercase font-bold tracking-wider mb-1">Project Submitted By</p>
+                <h3 className="text-lg font-bold text-white">KR Yashwanth Reddy</h3>
+                <div className="flex flex-col text-sm text-slate-400 mt-1">
+                  <span>Roll No: <span className="text-slate-200 font-mono">2401730151</span></span>
+                  <span className="text-slate-500">B.Tech CSE (AI & ML)</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Guide Card */}
+            <div className="bg-slate-800/40 p-6 rounded-xl border border-slate-700/50 hover:border-purple-500/30 transition-colors flex items-center gap-5">
+              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-purple-600 to-purple-800 flex items-center justify-center text-white shadow-lg shrink-0">
+                <User className="w-7 h-7" />
+              </div>
+              <div>
+                <p className="text-xs text-purple-400 uppercase font-bold tracking-wider mb-1">Under the Guidance of</p>
+                <h3 className="text-lg font-bold text-white">Mr. Vicky Kapoor</h3>
+                <p className="text-sm text-slate-400 mt-1">Faculty / Project Guide</p>
+              </div>
+            </div>
+          </div>
+        </footer>
 
       </main>
     </div>
