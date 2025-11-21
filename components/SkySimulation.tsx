@@ -7,18 +7,26 @@ interface SkySimulationProps {
 export const SkySimulation: React.FC<SkySimulationProps> = ({ sunAngle }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  useEffect(() => {
+  const draw = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Handle High DPI
+    // Handle High DPI and Resizing
     const dpr = window.devicePixelRatio || 1;
     const rect = canvas.getBoundingClientRect();
+    
+    // Safety check for zero-size (can happen during initial layout)
+    if (rect.width === 0 || rect.height === 0) return;
+
     canvas.width = rect.width * dpr;
     canvas.height = rect.height * dpr;
+    
+    // Reset transform to default before scaling
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.scale(dpr, dpr);
+    
     const width = rect.width;
     const height = rect.height;
 
@@ -54,7 +62,7 @@ export const SkySimulation: React.FC<SkySimulationProps> = ({ sunAngle }) => {
     ctx.fillRect(0, 0, width, height);
 
     // Sun Position
-    const orbitRadius = width * 0.4;
+    const orbitRadius = Math.min(width, height) * 0.4;
     const cx = width / 2;
     const cy = height * 0.85; // Horizon line lower down
     
@@ -121,7 +129,19 @@ export const SkySimulation: React.FC<SkySimulationProps> = ({ sunAngle }) => {
     ctx.textAlign = "center";
     ctx.fillText("Atmosphere Boundary", cx, cy - orbitRadius - 30);
     ctx.fillText("Observer", cx, cy + 20);
+  };
 
+  useEffect(() => {
+    // Draw immediately
+    draw();
+
+    // Handle resize
+    const handleResize = () => {
+      window.requestAnimationFrame(draw);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, [sunAngle]);
 
   return (
