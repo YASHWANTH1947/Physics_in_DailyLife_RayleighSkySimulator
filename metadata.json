@@ -1,0 +1,5 @@
+{
+  "name": "Rayleigh Sky Simulator",
+  "description": "Interactive physics simulation demonstrating Rayleigh scattering and why the sky changes color.",
+  "requestFramePermissions": []
+}
