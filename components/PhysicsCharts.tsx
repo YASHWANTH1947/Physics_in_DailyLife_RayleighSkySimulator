@@ -27,7 +27,6 @@ export const PhysicsCharts: React.FC<PhysicsChartsProps> = ({ sunAngle }) => {
 
   // Calculate Path Length Factor approximation: 1 / sin(elevation)
   // Elevation: 90 at noon, 0 at horizon. Minimal path = 1 unit.
-  const elevationRad = (sunAngle * Math.PI) / 180;
   const effectiveAngle = sunAngle > 90 ? 180 - sunAngle : sunAngle;
   // Clamp angle to avoid infinity, min 5 degrees
   const clampedAngle = Math.max(effectiveAngle, 5); 
@@ -59,7 +58,7 @@ export const PhysicsCharts: React.FC<PhysicsChartsProps> = ({ sunAngle }) => {
           </ResponsiveContainer>
         </div>
         <p className="text-xs text-slate-400 mt-2 text-center">
-          Blue light scatters ~4x more strongly than red light ($I \propto 1/\lambda^4$)
+          Blue light scatters ~4x more strongly than red light (I ∝ 1/λ⁴)
         </p>
       </div>
 
@@ -88,10 +87,11 @@ export const PhysicsCharts: React.FC<PhysicsChartsProps> = ({ sunAngle }) => {
 
         <div className="mt-4 pt-4 border-t border-slate-700">
             <div className="text-center">
-                <p className="font-serif italic text-slate-300 text-lg mb-1">
-                  $$ I \propto \frac{1}{\lambda^4} $$
+                <p className="font-serif italic text-slate-300 text-2xl mb-2">
+                  I ∝ <span className="text-lg">1</span>/<span className="text-lg">λ⁴</span>
                 </p>
                 <p className="text-xs text-slate-400">Rayleigh Scattering Formula</p>
+                <p className="text-[10px] text-slate-500 mt-1">Intensity (I) is inversely proportional to Wavelength (λ) to the 4th power</p>
             </div>
         </div>
       </div>
